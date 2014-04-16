@@ -57,8 +57,14 @@ void main() {
       expect(data, equals(JSON.decode(queryJsonString)));
     });
 
-    test("returns text response from strange request", () {
-      expect(formatter.formatResponse(strangeRequest, null) is String, isTrue);
+    test("returns empty text response from strange request", () {
+      expect(formatter.formatResponse(strangeRequest, null), equals(""));
+    });
+
+    test("returns xml response from strange request", () {
+      expect(formatter.formatResponse(fileFormatXml, {"a":0}).replaceAll('\r', '').replaceAll(' ', ''),
+        equals("<response><a>0</a></response>")
+      );
     });
 
   });

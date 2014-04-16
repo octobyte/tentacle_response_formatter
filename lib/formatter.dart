@@ -1,7 +1,7 @@
 library tentacle_response_formatter.formatter;
 import 'package:shelf/shelf.dart' as shelf;
-import 'package:xml/xml.dart';
 import 'dart:convert';
+import 'package:tentacle_response_formatter/xml_converter.dart';
 
 typedef String Formatter(dynamic data);
 
@@ -24,6 +24,13 @@ class ResponseFormatter {
    */
   Map<String, Formatter> formatterMappings = {
       "xml": xmlFormatter, "json": jsonFormatter, "text": textFormatter
+  };
+
+  /**
+   * Map of response formats to formatter functions.
+   */
+  Map<String, Formatter> responseFormatMappings = {
+      "xml": "application/xml", "json": "application/json", "text": "text/plain"
   };
 
   /**
@@ -116,28 +123,10 @@ String jsonFormatter(data) {
 }
 
 /**
- *
+ * Encodes the response data as XML
  */
-String xmlFormatter(data, [XmlElement el]) {
-  XmlElement root = new XmlElement('response');
-
-  if(data is Iterable) {
-    data.forEach((item) {
-
-    });
-  }
-
-  if(data is Map) {
-
-  }
-
-
-
-  return "<response/>";
-}
-
-XmlElement createChildNode(XmlElement node) {
-
+String xmlFormatter(data) {
+  return new XmlConverter().convert(data);
 }
 
 /**

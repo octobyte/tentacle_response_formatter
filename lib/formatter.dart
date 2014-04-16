@@ -35,6 +35,22 @@ class ResponseFormatter {
   };
 
   /**
+   * Register an additional formatter Function with identifier name (eg.: csv).
+   * An optional list of accept-headers can be provided the should be handled by
+   * this formatter.
+   */
+  registerFormatter(name, contentType, Formatter formatter, [List handles]) {
+    formatterMappings[name] = formatter;
+    acceptMappings[contentType] = name;
+    responseFormatMappings[name] = contentType;
+    if(handles != null) {
+      handles.forEach((handle) {
+        acceptMappings[handle] = name;
+      });
+    }
+  }
+
+  /**
    * Singleton constructor
    */
   factory ResponseFormatter() {
@@ -49,7 +65,8 @@ class ResponseFormatter {
   static ResponseFormatter instance;
 
   /**
-   *
+   * Detects the requested format and returns a response [String] with the data
+   * encoded appropriately.
    */
   FormatResult formatResponse(shelf.Request request, dynamic data) {
     var format = findTargetFormat(request);
@@ -119,6 +136,11 @@ class ResponseFormatter {
 
 }
 
+/**
+ * Result container for the ResponseFormatter. Contains
+ * the [String] result of the encoder and a contentType
+ * suggestion for the response header.
+ */
 class FormatResult {
 
   String contentType;

@@ -26,6 +26,8 @@ void main() {
   shelf.Request fileFormatXml = createShelfRequest('GET', '/asdf/qwer.xml');
   shelf.Request fileFormatJson = createShelfRequest('GET', '/asdf/qwer.json');
   shelf.Request chromeGetRequest = createShelfRequest('GET', '/asdf/qwer&format=xml', {'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'});
+  shelf.Request csvGetRequest = createShelfRequest('GET', '/asdf/qwer&format=csv', {'accept': 'text/csv'});
+  shelf.Request csvOverrideRequest = createShelfRequest('GET', '/asdf/qwer', {'accept': 'application/xhtml+xml'});
 
 
   group("formatResponse", () {
@@ -139,6 +141,30 @@ void main() {
 
     test("returns text from strange audio request", () {
       expect(formatter.findTargetFormat(strangeRequest), equals("text"));
+    });
+
+  });
+
+  group("register formatter", () {
+
+    formatter.registerFormatter("csv", "text/csv", (dynamic data) {
+      return "CSV";
+    }, ["application/json", "application/xhtml+xml"]);
+
+    test("CSV is target format", () {
+      expect(formatter.findTargetFormat(csvGetRequest), equals("csv"));
+    });
+
+    test("CSV is result", () {
+      var res = formatter.formatResponse(csvGetRequest, null);
+      expect(res.contentType, equals("text/csv"));
+      expect(res.body, equals("CSV"));
+    });
+
+    test("CSV is result for overridden accept header", () {
+      var res = formatter.formatResponse(csvOverrideRequest, null);
+      expect(res.contentType, equals("text/csv"));
+      expect(res.body, equals("CSV"));
     });
 
   });

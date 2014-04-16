@@ -16,6 +16,7 @@ class ResponseFormatter {
       "text/html": "xml",
       "application/json": "json",
       "text/json": "json",
+      "text/plain": "text",
       "*/*": "text"
   };
 
@@ -29,7 +30,7 @@ class ResponseFormatter {
   /**
    * Map of response formats to formatter functions.
    */
-  Map<String, Formatter> responseFormatMappings = {
+  Map<String, String> responseFormatMappings = {
       "xml": "application/xml", "json": "application/json", "text": "text/plain"
   };
 
@@ -50,9 +51,12 @@ class ResponseFormatter {
   /**
    *
    */
-  String formatResponse(shelf.Request request, dynamic data) {
+  FormatResult formatResponse(shelf.Request request, dynamic data) {
     var format = findTargetFormat(request);
-    return formatterMappings[format](data);
+    return new FormatResult(
+        formatterMappings[format](data),
+        responseFormatMappings[format]
+    );
   }
 
   /**
@@ -115,11 +119,21 @@ class ResponseFormatter {
 
 }
 
+class FormatResult {
+
+  String contentType;
+  String body;
+
+  FormatResult(this.body, this.contentType);
+}
+
 /**
  * Encodes the response data as Json
  */
 String jsonFormatter(data) {
-  return JSON.encode(data);
+  return JSON.encode(data, toEncodable: (dynamic obj) {
+    return obj.toString();
+  });
 }
 
 /**

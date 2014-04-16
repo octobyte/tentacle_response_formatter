@@ -34,37 +34,71 @@ void main() {
     });
 
     test("returns empty text message for nothing found", () {
-      expect(formatter.formatResponse(defaultRequest, {}), equals(""));
+      var res = formatter.formatResponse(defaultRequest, {});
+      expect(res.body, equals(""));
+      expect(res.contentType, equals("text/plain"));
+    });
+
+    test("returns FormatResult", () {
+      var res = formatter.formatResponse(defaultRequest, {});
+      expect(res is FormatResult, isTrue);
     });
 
     test("returns text message from response data", () {
-      expect(formatter.formatResponse(defaultRequest, {"message": "hello"}), equals("hello"));
+      var res = formatter.formatResponse(defaultRequest, {"message": "hello"});
+      expect(res.body, equals("hello"));
+      expect(res.contentType, equals("text/plain"));
     });
 
     test("returns json response from map data", () {
       var data = {"a":"b", "c":["a", "b", "c"]};
-      var queryJsonString = formatter.formatResponse(queryFormatJson, data);
-      var fileJsonString = formatter.formatResponse(fileFormatJson, data);
+      var queryJsonRes = formatter.formatResponse(queryFormatJson, data);
+      var fileJsonRes = formatter.formatResponse(fileFormatJson, data);
+      var queryJsonString = queryJsonRes.body;
+      var fileJsonString = fileJsonRes.body;
       expect(queryJsonString, equals(fileJsonString));
       expect(data, equals(JSON.decode(queryJsonString)));
+      expect(queryJsonRes.contentType, equals("application/json"));
+      expect(fileJsonRes.contentType, equals("application/json"));
     });
 
     test("returns json response from array", () {
       var data = [{"a": 1}, {"a": 2}, {"a": 3}];
-      var queryJsonString = formatter.formatResponse(queryFormatJson, data);
-      var fileJsonString = formatter.formatResponse(fileFormatJson, data);
+      var queryJsonRes = formatter.formatResponse(queryFormatJson, data);
+      var fileJsonRes = formatter.formatResponse(fileFormatJson, data);
+      var queryJsonString = queryJsonRes.body;
+      var fileJsonString = fileJsonRes.body;
       expect(queryJsonString, equals(fileJsonString));
       expect(data, equals(JSON.decode(queryJsonString)));
+      expect(queryJsonRes.contentType, equals("application/json"));
+      expect(fileJsonRes.contentType, equals("application/json"));
     });
 
     test("returns empty text response from strange request", () {
-      expect(formatter.formatResponse(strangeRequest, null), equals(""));
+      expect(formatter.formatResponse(strangeRequest, null).body, equals(""));
     });
 
     test("returns xml response from strange request", () {
-      expect(formatter.formatResponse(fileFormatXml, {"a":0}).replaceAll('\r', '').replaceAll(' ', ''),
+      expect(formatter.formatResponse(fileFormatXml, {"a":0}).body.replaceAll('\r', '').replaceAll(' ', ''),
         equals("<response><a>0</a></response>")
       );
+    });
+
+    test("calls to string on non covertible objects in XML", () {
+      var date = new DateTime.now();
+      var data = date;
+      var queryJsonRes = formatter.formatResponse(queryFormatXml, data);
+      expect(
+        queryJsonRes.body.replaceAll('\r', ''),
+        equals("<response>${date.toString()}</response>")
+      );
+    });
+
+    test("calls to string on non covertible objects in Json", () {
+      var date = new DateTime.now();
+      var data = {"date": date};
+      var queryJsonRes = formatter.formatResponse(queryFormatJson, data);
+      expect(queryJsonRes.body, equals('{"date":"${date.toString()}"}'));
     });
 
   });

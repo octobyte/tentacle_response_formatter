@@ -19,7 +19,8 @@ void main() {
 
   ResponseFormatter formatter = new ResponseFormatter();
 
-  shelf.Request defaultRequest = createShelfRequest('GET', '/asdf/qwer');
+  shelf.Request defaultRequest = createShelfRequest('GET', '/asdf/qwer', {'Accept': 'audio/*; q=0.2, audio/basic'});
+  shelf.Request strangeRequest = createShelfRequest('GET', '/asdf/qwer');
   shelf.Request queryFormatXml = createShelfRequest('GET', '/asdf/qwer?format=xml');
   shelf.Request queryFormatJson = createShelfRequest('GET', '/asdf/qwer?format=json');
   shelf.Request fileFormatXml = createShelfRequest('GET', '/asdf/qwer.xml');
@@ -56,6 +57,10 @@ void main() {
       expect(data, equals(JSON.decode(queryJsonString)));
     });
 
+    test("returns text response from strange request", () {
+      expect(formatter.formatResponse(strangeRequest, null) is String, isTrue);
+    });
+
   });
 
   group("findTargetFormat", () {
@@ -90,6 +95,10 @@ void main() {
 
     test("returns xml from browser accept header", () {
       expect(formatter.findTargetFormat(chromeGetRequest), equals("xml"));
+    });
+
+    test("returns text from strange audio request", () {
+      expect(formatter.findTargetFormat(strangeRequest), equals("text"));
     });
 
   });

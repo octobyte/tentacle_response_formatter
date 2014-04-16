@@ -102,7 +102,7 @@ class ResponseFormatter {
       }
       result.add(accept);
     });
-    if(result.length < 1) result.add("*/*");
+    if(!result.contains("*/*")) result.add("*/*");
     return result;
   }
 
@@ -145,7 +145,7 @@ XmlElement createChildNode(XmlElement node) {
  * response data.
  */
 String textFormatter(data) {
-  if(data is Map && data.containsKey("message")) {
+  if(data != null && data is Map && data.containsKey("message")) {
     return data["message"];
   }
   return "";

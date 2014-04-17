@@ -5,8 +5,8 @@ homepage: https://github.com/octobyte/tentacle_response_formatter
 author: Thomas Profelt <tom@octobyte.at>
 
 dependencies:
-  shelf: any
-  xml: any
+  shelf: ">=0.5.0+1 <0.6.0"
+  xml: ">=1.0.0 <2.0.0"
 
 dev_dependencies:
   unittest: any

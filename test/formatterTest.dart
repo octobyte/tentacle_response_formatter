@@ -81,7 +81,7 @@ void main() {
     });
 
     test("returns xml response from strange request", () {
-      expect(formatter.formatResponse(fileFormatXml, {"a":0}).body.replaceAll('\r', '').replaceAll(' ', ''),
+      expect(formatter.formatResponse(fileFormatXml, {"a":0}).body.replaceAll('\n', '').replaceAll(' ', ''),
         equals("<response><a>0</a></response>")
       );
     });

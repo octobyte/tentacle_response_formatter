@@ -13,37 +13,39 @@ class XmlConverter {
    * Convert method takes data a returns it as XML [String]
    */
   String convert([dynamic data]) {
-    return toXml(data).toString();
+    return toXml(data).toXmlString(pretty: true);
   }
 
   /**
    * Converts given data into an [XmlElement].
    */
   XmlElement toXml([dynamic data]) {
-    return _createNode(new XmlElement('response'), data);
+    var builder = new XmlBuilder();
+//    builder.processing('xml', 'version="1.0"');
+    builder.element('response', nest: () => _createNode(builder, data));
+    return builder.build().firstChild;
   }
 
   // internal recursive converter
-  XmlElement _createNode(XmlElement parent, dynamic data) {
-    if(data == null) return parent;
+  _createNode(XmlBuilder builder, dynamic data) {
+    if(data == null) return null;
 
     if(data is Iterable) {
-      data.forEach((item) {
-        var child = _createNode(new XmlElement('item'), item);
-        parent.addChild(child);
-      });
-      return parent;
+      return data.map((item) =>
+        builder.element('item', nest: () => _createNode(builder, item)))
+        .toList(growable: false);
     }
 
     if(data is Map) {
+      var children = [];
       data.forEach((name, value) {
-        parent.addChild(_createNode(new XmlElement(name), value));
+          children.add(builder.element(name, nest: () =>
+              _createNode(builder, value)));
       });
-      return parent;
+      return children;
     }
 
-    parent.addChild(new XmlText(data.toString()));
-    return parent;
+    return builder.text(data.toString());
   }
 
   factory XmlConverter() {

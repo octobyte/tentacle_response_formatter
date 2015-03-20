@@ -1,4 +1,5 @@
 library tentacle_response_formatter.formatter;
+
 import 'package:shelf/shelf.dart' as shelf;
 import 'dart:convert';
 import 'package:tentacle_response_formatter/xml_converter.dart';
@@ -11,27 +12,31 @@ class ResponseFormatter {
    * Map of accept headers to response formats.
    */
   Map<String, String> acceptMappings = {
-      "application/xml": "xml",
-      "application/xhtml+xml": "xml",
-      "text/html": "xml",
-      "application/json": "json",
-      "text/json": "json",
-      "text/plain": "text",
-      "*/*": "text"
+    "application/xml": "xml",
+    "application/xhtml+xml": "xml",
+    "text/html": "xml",
+    "application/json": "json",
+    "text/json": "json",
+    "text/plain": "text",
+    "*/*": "text"
   };
 
   /**
    * Map of response formats to formatter functions.
    */
   Map<String, Formatter> formatterMappings = {
-      "xml": xmlFormatter, "json": jsonFormatter, "text": textFormatter
+    "xml": xmlFormatter,
+    "json": jsonFormatter,
+    "text": textFormatter
   };
 
   /**
    * Map of response formats to formatter functions.
    */
   Map<String, String> responseFormatMappings = {
-      "xml": "application/xml", "json": "application/json", "text": "text/plain"
+    "xml": "application/xml",
+    "json": "application/json",
+    "text": "text/plain"
   };
 
   /**
@@ -43,7 +48,7 @@ class ResponseFormatter {
     formatterMappings[name] = formatter;
     acceptMappings[contentType] = name;
     responseFormatMappings[name] = contentType;
-    if(handles != null) {
+    if (handles != null) {
       handles.forEach((handle) {
         acceptMappings[handle] = name;
       });
@@ -54,7 +59,7 @@ class ResponseFormatter {
    * Singleton constructor
    */
   factory ResponseFormatter() {
-    if(instance == null) {
+    if (instance == null) {
       instance = new ResponseFormatter._create();
     }
     return instance;
@@ -71,9 +76,7 @@ class ResponseFormatter {
   FormatResult formatResponse(shelf.Request request, dynamic data) {
     var format = findTargetFormat(request);
     return new FormatResult(
-        formatterMappings[format](data),
-        responseFormatMappings[format]
-    );
+        formatterMappings[format](data), responseFormatMappings[format]);
   }
 
   /**
@@ -95,23 +98,23 @@ class ResponseFormatter {
     String acceptHeaders = request.headers['accept'];
 
     // from query string format param
-    if(queryFormat != null && formatterMappings.containsKey(queryFormat)) {
+    if (queryFormat != null && formatterMappings.containsKey(queryFormat)) {
       return queryFormat;
     }
 
     // from path file extension
-    if(path.lastIndexOf('.') != -1 && path.lastIndexOf('.')+1 < path.length) {
-      var fileFormat = path.substring(
-          path.lastIndexOf('.')+1
-      );
-      if(formatterMappings.containsKey(fileFormat)) {
+    if (path.lastIndexOf('.') != -1 &&
+        path.lastIndexOf('.') + 1 < path.length) {
+      var fileFormat = path.substring(path.lastIndexOf('.') + 1);
+      if (formatterMappings.containsKey(fileFormat)) {
         return fileFormat;
       }
     }
 
     // from accept header
     List<String> accepts = _parseAcceptHeaders(request.headers['accept']);
-    String accepted = accepts.firstWhere((accept) => acceptMappings.containsKey(accept));
+    String accepted =
+        accepts.firstWhere((accept) => acceptMappings.containsKey(accept));
     return acceptMappings[accepted];
   }
 
@@ -119,21 +122,20 @@ class ResponseFormatter {
    * Parses the accept headers of a request into a String list.
    */
   List<String> _parseAcceptHeaders(String accepts) {
-    if(!(accepts is String)) return ["*/*"];
+    if (!(accepts is String)) return ["*/*"];
 
     List<String> result = [];
     List<String> acceptList = accepts.split(',');
 
     acceptList.forEach((accept) {
-      if(accept.contains(';q=')) {
+      if (accept.contains(';q=')) {
         accept = accept.substring(0, accept.indexOf(';'));
       }
       result.add(accept);
     });
-    if(!result.contains("*/*")) result.add("*/*");
+    if (!result.contains("*/*")) result.add("*/*");
     return result;
   }
-
 }
 
 /**
@@ -142,7 +144,6 @@ class ResponseFormatter {
  * suggestion for the response header.
  */
 class FormatResult {
-
   String contentType;
   String body;
 
@@ -170,7 +171,7 @@ String xmlFormatter(data) {
  * response data.
  */
 String textFormatter(data) {
-  if(data != null && data is Map && data.containsKey("message")) {
+  if (data != null && data is Map && data.containsKey("message")) {
     return data["message"];
   }
   return "";

@@ -1,4 +1,5 @@
 library tentacle_response_formatter.XmlConverter;
+
 import 'package:xml/xml.dart';
 
 /**
@@ -22,28 +23,33 @@ class XmlConverter {
    * Converts given data into an [XmlElement].
    */
   XmlElement toXml([dynamic data]) {
-    return new XmlElement(new XmlName('response'), const <XmlAttribute>[], _createNode(data));
+    return new XmlElement(
+        new XmlName('response'), const <XmlAttribute>[], _createNode(data));
   }
 
   // internal recursive converter
   List<XmlNode> _createNode(dynamic data) {
-    if(data == null) return <XmlNode>[];
+    if (data == null) return <XmlNode>[];
 
-    if(data is Iterable) {
-      return data.map((item) =>
-        new XmlElement(new XmlName('item'), const <XmlAttribute>[], _createNode(item))).toList();
+    if (data is Iterable) {
+      return data
+          .map((item) => new XmlElement(
+              new XmlName('item'), const <XmlAttribute>[], _createNode(item)))
+          .toList();
     }
 
-    if(data is Map) {
-      return data.keys.map((name) =>
-        new XmlElement(new XmlName(name), const <XmlAttribute>[], _createNode(data[name]))).toList();
+    if (data is Map) {
+      return data.keys
+          .map((name) => new XmlElement(new XmlName(name),
+              const <XmlAttribute>[], _createNode(data[name])))
+          .toList();
     }
 
     return [new XmlText(data.toString())];
   }
 
   factory XmlConverter() {
-    if(instance == null) {
+    if (instance == null) {
       instance = new XmlConverter._create();
     }
     return instance;

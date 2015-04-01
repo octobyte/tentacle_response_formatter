@@ -1,5 +1,4 @@
 library tentacle_response_formatter.XmlConverter;
-
 import 'package:xml/xml.dart';
 
 /**
@@ -14,42 +13,43 @@ class XmlConverter {
    * Convert method takes data a returns it as XML [String]
    */
   String convert([dynamic data]) {
-    var buffer = new StringBuffer();
-    toXml(data).writePrettyTo(buffer, 0, '   ');
-    return buffer.toString();
+    return toXml(data).toXmlString(pretty: true);
   }
 
   /**
    * Converts given data into an [XmlElement].
    */
   XmlElement toXml([dynamic data]) {
-    return new XmlElement(
-        new XmlName('response'), const <XmlAttribute>[], _createNode(data));
+    var builder = new XmlBuilder();
+//    builder.processing('xml', 'version="1.0"');
+    builder.element('response', nest: () => _createNode(builder, data));
+    return builder.build().firstChild;
   }
 
   // internal recursive converter
-  List<XmlNode> _createNode(dynamic data) {
-    if (data == null) return <XmlNode>[];
+  _createNode(XmlBuilder builder, dynamic data) {
+    if(data == null) return null;
 
-    if (data is Iterable) {
-      return data
-          .map((item) => new XmlElement(
-              new XmlName('item'), const <XmlAttribute>[], _createNode(item)))
-          .toList();
+    if(data is Iterable) {
+      return data.map((item) =>
+        builder.element('item', nest: () => _createNode(builder, item)))
+        .toList(growable: false);
     }
 
-    if (data is Map) {
-      return data.keys
-          .map((name) => new XmlElement(new XmlName(name),
-              const <XmlAttribute>[], _createNode(data[name])))
-          .toList();
+    if(data is Map) {
+      var children = [];
+      data.forEach((name, value) {
+          children.add(builder.element(name, nest: () =>
+              _createNode(builder, value)));
+      });
+      return children;
     }
 
-    return [new XmlText(data.toString())];
+    return builder.text(data.toString());
   }
 
   factory XmlConverter() {
-    if (instance == null) {
+    if(instance == null) {
       instance = new XmlConverter._create();
     }
     return instance;

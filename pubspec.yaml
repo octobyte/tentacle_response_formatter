@@ -15,9 +15,6 @@ dependencies:
   xml: '>=2.1.0 <3.0.0'
 
 dev_dependencies:
-  unittest: '>=0.9.0 <0.13.0'
-  analyzer: '>=0.24.0 <0.26.0'
-  grinder: '>=0.7.0-dev.1 <0.8.0'
-  linter: '>=0.0.2 <0.1.0'
-  unittest: any
+  bwu_utils_dev: '>=0.1.0-dev.5 <0.2.0'
+  test: '>=0.12.0 <0.13.0'
 

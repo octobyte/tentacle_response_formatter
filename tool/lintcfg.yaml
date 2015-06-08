@@ -2,8 +2,8 @@
 files:
   include:
     - '**/lib/**'
-    - '**/tool/**'
     - '**/test/**'
+    - '**/tool/**'
 #  exclude:
 
 # Rule sets; ignore for now rule set inheritance and externally contributed rules
@@ -11,11 +11,11 @@ files:
 #  [group]:
 #    [name]:
 #      ... config
-rules:
+#rules:
 #  style_guide:
 #    unnecessary_getters: false
 #  pub:
 #    package_names:
 #      enabled: false # longer form of package_names: false
-  lint:
-ä    constant_identifier_names: false
+#  lint:
+#    constant_identifier_names: false

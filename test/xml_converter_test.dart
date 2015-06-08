@@ -1,6 +1,6 @@
-library tentacle_response_formatter.test.xml_converter;
+library shelf_response_formatter.test.xml_converter;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:shelf_response_formatter/xml_converter.dart';
 
 void main() {

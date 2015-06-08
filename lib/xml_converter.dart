@@ -1,4 +1,4 @@
-library shelf_response_formatter.XmlConverter;
+library shelf_response_formatter.xml_converter;
 
 import 'package:xml/xml.dart';
 

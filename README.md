@@ -1,11 +1,17 @@
-## Shelf Response Formatter ##
+#Shelf Response Formatter
+
+[![Star this Repo](https://img.shields.io/github/stars/bwu-dart/shelf_response_formatter.svg?style=flat)](https://github.com/bwu-dart/shelf_response_formatter)
+[![Pub Package](https://img.shields.io/pub/v/shelf_response_formatter.svg?style=flat)](https://pub.dartlang.org/packages/shelf_response_formatter)
+[![Build Status](https://travis-ci.org/bwu-dart/shelf_response_formatter.svg?branch=travis)](https://travis-ci.org/bwu-dart/shelf_response_formatter)
+[![Coverage Status](https://coveralls.io/repos/bwu-dart/shelf_response_formatter/badge.svg)](https://coveralls.io/r/bwu-dart/shelf_response_formatter)
+
 A small class that, given a [shelf](http://pub.dartlang.org/packages/shelf)
 request and some simple data, will determine a correct response format (eg.:
 Json or XML) and convert the data to the appropriate format.
 
 This package is a fork of [tentacle_response_formatter](https://pub.dartlang.org/packages/tentacle_response_formatter).
 
-### How to use ###
+##How to use
 ```dart
 // ResponseFormatter is a Singleton so you will always get the same instance
 // with
@@ -23,7 +29,7 @@ print(result.body) // -> '{"message":"hello"}' or
 print(result.contentType) // -> "application/json" or "application/xml" or "text/plain"
 ```
 
-### How is the response format detected ###
+##How is the response format detected
 There are currently 3 values that influence the response format detection. They
 are applied in the following order:
 
@@ -43,7 +49,7 @@ response otherwise the result will be an empty String. The string formatter is
 not a real formatter but rather a fallback. Read later on how to add your own
 formatter and register it for content types.
 
-### Add your own response formatter ###
+##Add your own response formatter
 You may want to add your own formatters or content-type mappings to the
 formatter. To do so you have to provide a formatter function which takes dynamic
 data and returns a String. Furthermore you have to provide a unique name and may
@@ -69,5 +75,5 @@ formatter.registerFormatter("json", "application/json", (dynamic data) {
 // initially registered for
 ```
 
-### License ###
+##License
 Apache 2.0

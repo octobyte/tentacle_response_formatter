@@ -1,15 +1,15 @@
-library tentacle_response_formatter.test.formatter;
+library shelf_response_formatter.test.formatter;
 
 import 'dart:convert';
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf_response_formatter/shelf_response_formatter.dart';
 
 void main() {
-  String BASE_URL = "http://www.test.io";
+  String baseUrl = "http://www.test.io";
   shelf.Request createShelfRequest(String method, String path,
       [Map<String, String> headers]) {
-    Uri uri = Uri.parse(BASE_URL + path);
+    Uri uri = Uri.parse(baseUrl + path);
     if (headers == null) {
       headers = {'accept': '*/*'};
     }

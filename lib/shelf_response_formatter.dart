@@ -100,7 +100,7 @@ class ResponseFormatter {
     }
 
     // from accept header
-    List<String> accepts = _parseAcceptHeaders(request.headers['accept']);
+    List<String> accepts = _parseAcceptHeaders(acceptHeaders);
     String accepted =
         accepts.firstWhere((accept) => acceptMappings.containsKey(accept));
     return acceptMappings[accepted];

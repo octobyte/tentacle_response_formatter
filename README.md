@@ -2,8 +2,8 @@
 
 [![Star this Repo](https://img.shields.io/github/stars/bwu-dart/shelf_response_formatter.svg?style=flat)](https://github.com/bwu-dart/shelf_response_formatter)
 [![Pub Package](https://img.shields.io/pub/v/shelf_response_formatter.svg?style=flat)](https://pub.dartlang.org/packages/shelf_response_formatter)
-[![Build Status](https://travis-ci.org/bwu-dart/shelf_response_formatter.svg?branch=travis)](https://travis-ci.org/bwu-dart/shelf_response_formatter)
-[![Coverage Status](https://coveralls.io/repos/bwu-dart/shelf_response_formatter/badge.svg)](https://coveralls.io/r/bwu-dart/shelf_response_formatter)
+[![Build Status](https://travis-ci.org/bwu-dart/shelf_response_formatter.svg?branch=master)](https://travis-ci.org/bwu-dart/shelf_response_formatter)
+[![Coverage Status](https://coveralls.io/repos/bwu-dart/shelf_response_formatter/badge.svg?branch=master)](https://coveralls.io/r/bwu-dart/shelf_response_formatter)
 
 A small class that, given a [shelf](http://pub.dartlang.org/packages/shelf)
 request and some simple data, will determine a correct response format (eg.:

@@ -7,6 +7,7 @@ homepage: https://github.com/bwu-dart/shelf_response_formatter
 authors:
 - Günter Zöchbauer <guenter@gzoechbauer.com>
 - Thomas Profelt <tom@octobyte.at>
+
 environment:
   sdk: '>=1.0.0 <2.0.0'
 
@@ -15,6 +16,6 @@ dependencies:
   xml: '>=2.1.0 <3.0.0'
 
 dev_dependencies:
-  bwu_utils_dev: '>=0.1.0-dev.5 <0.2.0'
+  bwu_grinder_tasks: '>=0.1.0 <0.2.0'
+  grinder: '>=0.7.2 <0.8.0'
   test: '>=0.12.0 <0.13.0'
-

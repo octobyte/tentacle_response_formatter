@@ -1,3 +1,4 @@
+@TestOn('vm')
 library shelf_response_formatter.test.xml_converter;
 
 import 'package:test/test.dart';

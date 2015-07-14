@@ -1,3 +1,4 @@
+@TestOn('vm')
 library shelf_response_formatter.test.formatter;
 
 import 'dart:convert';

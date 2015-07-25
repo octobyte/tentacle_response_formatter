@@ -1,2 +1,5 @@
-*packages
-pubspec.lock
+build/
+.idea/
+packages
+.packages
+.pub/

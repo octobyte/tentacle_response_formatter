@@ -1,58 +1,79 @@
-## Tentacle Response Formatter ##
-A small class that, given a [shelf](http://pub.dartlang.org/packages/shelf) request and some simple
-data, will determine a correct response format (eg.: Json or XML) and convert the data to the appropriate
-format.
+#Shelf Response Formatter
 
-### How to use ###
+[![Star this Repo](https://img.shields.io/github/stars/bwu-dart/shelf_response_formatter.svg?style=flat)](https://github.com/bwu-dart/shelf_response_formatter)
+[![Pub Package](https://img.shields.io/pub/v/shelf_response_formatter.svg?style=flat)](https://pub.dartlang.org/packages/shelf_response_formatter)
+[![Build Status](https://travis-ci.org/bwu-dart/shelf_response_formatter.svg?branch=master)](https://travis-ci.org/bwu-dart/shelf_response_formatter)
+[![Coverage Status](https://coveralls.io/repos/bwu-dart/shelf_response_formatter/badge.svg?branch=master)](https://coveralls.io/r/bwu-dart/shelf_response_formatter)
+
+A small class that, given a [shelf](http://pub.dartlang.org/packages/shelf)
+request and some simple data, will determine a correct response format (eg.:
+Json or XML) and convert the data to the appropriate format.
+
+This package is a fork of [tentacle_response_formatter](https://pub.dartlang.org/packages/tentacle_response_formatter).
+
+##How to use
 ```dart
-// ResponseFormatter is a Singleton so you will always get the same instance with new
-ResponseFormatter formatter = new ResponseFormatter();
+// ResponseFormatter is a Singleton so you will always get the same instance
+// with
+new ResponseFormatter formatter = new ResponseFormatter();
 
-// create a result from a shelf.Request and data
+// Create a result from a shelf.Request and data
 FormatResult result = formatter.formatResponse(request, {"message": "hello"});
 
-//body contains the generated response as String
-print(result.body) // -> '{"message":"hello"}' or '<response><message>hello</message></response>' or 'hello'
+// Body contains the generated response as String
+print(result.body) // -> '{"message":"hello"}' or
+    '<response><message>hello</message></response>' or 'hello'
 
-//contentType is a suggestion to set as the HttpHeaders.CONTENT_TYPE in the shelf.Response you create
+// contentType is a suggestion to set as the HttpHeaders.CONTENT_TYPE in the
+// shelf.Response you create
 print(result.contentType) // -> "application/json" or "application/xml" or "text/plain"
 ```
 
-### How is the response format detected ###
-There are currently 3 values that influence the response format detection. They are applyed in the following order:
+##How is the response format detected
+There are currently 3 values that influence the response format detection. They
+are applied in the following order:
 
-1. Format query param: "http://example.com/some?format=json" would force the response to be converted to Json.
-2. Format file extension: "http://example.com/some.xml" would force the response to be converted to XML.
-3. Accept Header: "accept: application/json, text/xml" would force the response to be converted to Json.
+1. Format query param: "http://example.com/some?format=json" would force the
+response to be converted to Json.
+2. Format file extension: "http://example.com/some.xml" would force the response
+to be converted to XML.
+3. Accept Header: "accept: application/json, text/xml" would force the response
+to be converted to Json.
 
-Accept headers are used in the order they are defined. So first format has precedence over second and so forth.
+Accept headers are used in the order they are defined. So first format has
+precedence over second and so forth.
 
-If no format can be detected that has a valid encoder registered the response is encoded as String. If data contains
-a message field it is taken for String response otherwise the result will be an empty String. The string formatter is
-not a real formatter but rather a fallback. Read later on how to add your own formatter and register it for content types.
+If no format can be detected that has a valid encoder registered the response is
+encoded as String. If data contains a message field it is taken for String
+response otherwise the result will be an empty String. The string formatter is
+not a real formatter but rather a fallback. Read later on how to add your own
+formatter and register it for content types.
 
-### Add your own response formatter ###
-You may want to add your own formatters or content-type mappings to the formatter. To do so you have to provide a
-formatter function which takes dynamic data and returns a String. Furthermore you have to provide a unique name and
-may provide your custom content-types that should be handled by your formatter.
+##Add your own response formatter
+You may want to add your own formatters or content-type mappings to the
+formatter. To do so you have to provide a formatter function which takes dynamic
+data and returns a String. Furthermore you have to provide a unique name and may
+provide your custom content-types that should be handled by your formatter.
 ```dart
-// add a simple formatter for csv
+// Add a simple formatter for csv
 formatter.registerFormatter("csv", "text/csv", (dynamic data) {
   return "Your CSV result here";
 });
-// now ?format=csv, file.csv and accept header "text/csv" are formatted using your formatter
+// Now ?format=csv, file.csv and accept header "text/csv" are formatted using
+// your formatter
 
-// override additional accept-headers
+// Override additional accept-headers
 formatter.registerFormatter("allmighty", "text/allmighty", (dynamic data) {
       return "allmighty response body";
 }, ["application/json", "application/xhtml+xml", "*/*", "text/plain", "application/xml"]);
 
-// replace existing formatter
+// Replace existing formatter
 formatter.registerFormatter("json", "application/json", (dynamic data) {
   return "Your json result here";
 });
-// json is now handled by your formatter including all accept-headers json was initially registered for
+// Json is now handled by your formatter including all accept-headers json was
+// initially registered for
 ```
 
-### License ###
+##License
 Apache 2.0
